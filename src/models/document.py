@@ -40,11 +40,28 @@ class Document:
     ]
 
     def __init__(self, main_text, img_legend, secondary_text):
+        """
+        Initializes a Document object with the given main text, image legend, and secondary text.
+
+        Args:
+            main_text (str): The main text of the document.
+            img_legend (str): The legend of the image in the document.
+            secondary_text (str): The secondary text of the document.
+        """
         self.main_text = main_text
         self.img_legend = img_legend
         self.secondary_text = secondary_text
 
 def get_document():
+    """
+    Retrieves a document object.
+
+    Parameters:
+        None
+
+    Returns:
+        Document: A document object with written information
+    """
     text1 = '''
         <p>Humans have long been fascinated by facial proportions as ultimately these proportions make up the geometry of one’s face. In short, you are your proportions, measurements and ratios.</p>
         <p>Following this, it is easy to understand why proportions are so closely linked to beauty. An attractive face by definition would have to have different proportions to an unattractive one as they inherently look different and have different forms. While this idea has held true for millennia, our application of facial proportions has changed.</p>

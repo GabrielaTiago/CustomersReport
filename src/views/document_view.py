@@ -8,9 +8,16 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph
 
 class DocumentGenerator:
-    def __init__(self, file_path, document):
-        self.file_path = file_path
-        self.c = canvas.Canvas(self.file_path, pagesize=A4)
+    def __init__(self, file_name, document):
+        """
+        Initializes the DocumentGenerator class.
+
+        Args:
+            file_name (str): The filename for the pdf document.
+            document (Document): The Document object containing the information to be added to the document.
+        """
+        self.file_name = file_name
+        self.c = canvas.Canvas(self.file_name, pagesize=A4)
         self.width, self.height = A4
         self.margin = 12
         self.document = document
@@ -20,9 +27,28 @@ class DocumentGenerator:
         self.image_paths = self.document.image_paths
 
     def add_new_fonts(self, font, path):
+        """
+        Register a new font for the PDF document.
+
+        Args:
+            font (str): The name of the font.
+            path (str): The path to the font file.
+
+        Returns:
+            None
+        """
         pdfmetrics.registerFont(TTFont(font, path))
 
     def draw_grid(self, page='light'):
+        """
+        Draws a grid on the PDF document.
+
+        Args:
+            page (str, optional): The type of page. Defaults to 'light'.
+
+        Returns:
+            None
+        """
         c, margin, width, height = self.c, self.margin, self.width, self.height
         num_lines = 13
         initial_ofset = 6 * margin
@@ -31,10 +57,10 @@ class DocumentGenerator:
         line_spacing = 61.5
 
         # Header grid
-        if page == 'light':
-            c.setStrokeColorRGB(255, 0, 0, 0.3)
-        else:
+        if page == 'dark':
             c.setStrokeColorRGB(221, 221, 221, 0.3)
+        else:
+            c.setStrokeColorRGB(255, 0, 0, 0.3)
 
         c.setLineWidth(1)
         c.line(margin, height - margin, width - margin, height - margin)
@@ -54,6 +80,17 @@ class DocumentGenerator:
             c.line(x_position + additicional_ofset, height - initial_ofset, x_position + additicional_ofset, margin_bottom)
 
     def draw_header(self, header_texts, color, page_number='01'):
+        """
+        Draws the header section of the document.
+
+        Args:
+            header_texts (list): A list of dictionaries containing the text for each header element.
+            color (str): The color of the header.
+            page_number (str, optional): The page number. Defaults to '01'.
+
+        Returns:
+            None
+        """
         c, fonts, font_sizes, margin, width, height = self.c, self.fonts, self.font_sizes, self.margin, self.width, self.height
         circle_radius = 1
         text_y_position = height - margin - 15
@@ -80,6 +117,15 @@ class DocumentGenerator:
         c.drawString(page_number_position, text_y_position - 2, page_number)
 
     def draw_subtitle(self, page='light'):
+        """
+        Draws a subtitle on the PDF document.
+
+        Parameters:
+            page (str): The page color. Default is 'light'.
+
+        Returns:
+            None
+        """
         c, height, margin, fonts, font_size = self.c, self.height, self.margin, self.fonts, self.font_sizes
         x_position = margin + 8
         y_position = height - margin - 81
@@ -95,6 +141,16 @@ class DocumentGenerator:
         c.drawString(x_position + 3.5, y_position + 3, "SEXUAL DIOMORPHISM")
 
     def draw_title(self, title, color):
+        """
+        Draws the title on the document view.
+
+        Args:
+            title (str): The title to be drawn.
+            color (str): The color of the title.
+
+        Returns:
+            None
+        """
         c, margin, height, fonts, font_sizes = self.c, self.margin, self.height, self.fonts, self.font_sizes
         x_position = margin + 8
         y_position = height - margin - 87
@@ -110,6 +166,18 @@ class DocumentGenerator:
         paragraph.drawOn(c, x_position, y_position - h)
 
     def draw_about(self, x, y, color, about):
+        """
+        Draw the about information on the PDF document.
+
+        Args:
+            x (float): The x-coordinate of the starting point.
+            y (float): The y-coordinate of the starting point.
+            color (str): The color of the text.
+            about (list): A list containing two strings: the number and the text.
+
+        Returns:
+            None
+        """
         c, fonts, font_size = self.c, self.fonts, self.font_sizes
         c.setFont(fonts['zagma'], font_size['small'])
         c.setFillColor(gray)
@@ -119,8 +187,20 @@ class DocumentGenerator:
         c.drawString(x + 20, y, about[1])
 
     def draw_text_columns(self):
+        """
+        Draws the text columns on the document view.
+
+        This method splits the main text into paragraphs and draws them on the document view
+        in multiple columns. If the remaining height in a column is not enough for the next
+        paragraph, the method moves to the next column.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         c, height, margin, fonts, font_size, document = self.c, self.height, self.margin, self.fonts, self.font_sizes, self.document
-        ## Middle column and Right column - (Text continues in the next column)
         position_about_x = margin + 196
         position_about_y = height - margin - 100
         self.draw_about(position_about_x, position_about_y, '#121212', document.abouts[0])
@@ -157,6 +237,19 @@ class DocumentGenerator:
                 y = A4[1] - 125
 
     def draw_footer_imgs(self):
+        """
+        Draw the footer images on the document.
+
+        This method draws two images and a paragraph on the document footer.
+        The images are positioned at specific coordinates on the document.
+        The paragraph is styled with a custom style and contains the image legend.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
         c, width, height, margin, fonts, font_sizes, image_paths, img_legend = self.c, self.width, self.height, self.margin, self.fonts, self.font_sizes, self.image_paths, self.document.img_legend
         column_width = 180
         custom_styles = ParagraphStyle(name='CustomStyle',
@@ -174,6 +267,19 @@ class DocumentGenerator:
         c.drawImage(image_paths['image2'], x=(width - 199), y=(height - 809), width=179, height=175)
 
     def draw_second_page_column(self):
+        """
+        Draws the second page column on the document view.
+
+        This method is responsible for drawing the second page column on the document view.
+        It sets the position of the about section, the text content, and the custom styles for the paragraph.
+        Finally, it wraps and draws the paragraph on the canvas.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
         c, height, margin, fonts, font_sizes, document = self.c, self.height, self.margin, self.fonts, self.font_sizes, self.document
         position_about_x = margin + 8
         position_about_y = height - margin - 244
@@ -195,6 +301,19 @@ class DocumentGenerator:
         paragraph.drawOn(c, x, y - h)
 
     def draw_second_page_footer(self):
+        """
+        Draws the footer for the second page of the document.
+
+        This method sets the stroke color and draws lines to create a footer section.
+        It also sets the fill color and font for the footer texts.
+        The footer texts are then drawn using the specified x and y positions.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
         c, width, height, margin, fonts, font_sizes, document = self.c, self.width, self.height, self.margin, self.fonts, self.font_sizes, self.document
         X_POSITION = margin + 8
         Y_POSITION = height - margin - 715
@@ -237,6 +356,15 @@ class DocumentGenerator:
             paragraph.drawOn(c, x[i],  y - h)
 
     def generate_pdf(self):
+        """
+        Generates a PDF document with the specified content and saves it.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
         # Add new fonts
         self.add_new_fonts(self.fonts['neue_montreal_medium'], self.font_paths['neue_montreal_medium'])
         self.add_new_fonts(self.fonts['neue_montreal_thin'], self.font_paths['neue_montreal_thin'])
