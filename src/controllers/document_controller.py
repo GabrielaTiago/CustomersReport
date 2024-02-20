@@ -18,8 +18,8 @@ class DocumentController:
         Returns:
             None
         """
-        DocumentGenerator("document.pdf", self.document)
-
+        document_generator = DocumentGenerator("document.pdf", self.document)
+        document_generator.generate_pdf()
 
 document_controller = DocumentController()
 document_controller.create_pdf()
