@@ -1,4 +1,6 @@
+import os
 import re
+from dotenv import load_dotenv
 from reportlab.lib.colors import gray, HexColor
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
@@ -6,6 +8,8 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph
+
+load_dotenv()
 
 class DocumentGenerator:
     def __init__(self, file_name, document):
@@ -370,7 +374,8 @@ class DocumentGenerator:
         self.add_new_fonts(self.fonts['neue_montreal_thin'], self.font_paths['neue_montreal_thin'])
         self.add_new_fonts(self.fonts['zagma'], self.font_paths['zagma'])
 
-        self.draw_grid() # Draw grid
+        if os.getenv('SHOW_GRID') == 'True':
+            self.draw_grid() # Draw grid
 
         # Building content
         self.draw_header(self.document.headers_texts[0], '#121212')
@@ -386,7 +391,8 @@ class DocumentGenerator:
         self.c.setFillColor(background_color)
         self.c.rect(0, 0, self.width, self.height, fill=True)
 
-        self.draw_grid('dark') # Draw grid
+        if os.getenv('SHOW_GRID') == 'True':
+            self.draw_grid('dark') # Draw grid
 
         # Building content for the second page
         self.draw_header(self.document.headers_texts[1], '#FFFFFF', page_number='02')

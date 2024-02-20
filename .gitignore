@@ -15,7 +15,8 @@ build/
 # Virtual environments
 venv/
 env/
-.env/
+.env*
+!*.env.example
 
 # IDEs and editors
 .idea/
