@@ -14,19 +14,97 @@ The task involves the following requirements:
 
 ## Getting Started
 
-To get started with this project, follow the steps below:
+To get started with this project, open a terminal and follow the steps below:
+
+### Running locally
 
 1. Clone the repository.
-   `git clone https://github.com/GabrielaTiago/CustomersReport.git`
-2. Install the required dependencies.
-   `pip install -r requirements.txt`
-3. Run the main script to generate the Customer's Report.
 
-## Dependencies
+    ```shell
+    git clone https://github.com/GabrielaTiago/CustomersReport.git
+    ```
 
-This project requires the following dependencies:
+2. Navigate to the project folder using the `cd` command. For example:
 
-- ReportLab: [Link to ReportLab](https://www.reportlab.com/)
+    ```shell
+    cd /path/to/CustomersReport
+    ```
+
+3. Create the virtual environment using the command:
+
+    ```shell
+    python3 -m venv venv
+    ```
+
+4. Activate the virtual environment. The command to do this depends on your operating system:
+
+    - Windows:
+
+    ```shell
+    .\venv\Scripts\activate
+    ```
+
+    - MacOS/Linux:
+
+    ```shell
+    source venv/bin/activate
+    ```
+
+5. Install the required dependencies
+
+    ```shell
+    pip install -r requirements.txt
+    ```
+
+6. Create an `.env` file in the root of the project
+
+    - Windows:
+
+    ```shell
+    copy nul .env > nul
+    ```
+
+    - MacOS/Linux:
+
+    ```shell
+    touch .env
+    ```
+
+7. Add the `SHOW_GRID` environment variable to the .env file, just like the `.env.example` fie. Its value must be `True` or `False`
+
+    - If **_SHOW_GRID=True_**, the grid will apper on the pdf
+
+8. Run the main file
+
+    ```shell
+    python src/main.py
+    ```
+
+To deactivate the venv run `deactivate`
+
+**OBS:** If you get an error of permition to write the file run `chmod u+w .` with admin permition.
+
+### Running on docker
+
+1. Execute the steps 1,2, 6 and 7 of the **Running locally** instructions
+
+2. Build a new docker image `customer-report-pdf`
+
+    ```shell
+    docker build -t customer-report-pdf .
+    ```
+
+3. Start the container and reference the path to your local folder `/path/to/CustomersReport`
+
+    ```shell
+    docker run --rm -v /path/to/CustomersReport/:/app customer-report-pdf
+    ```
+
+To remove the created image run `docker rmi customer-report-pdf`
+
+$~$
+
+In both cases the `document` will be placed on the project route.
 
 ## Structure
 
@@ -53,6 +131,7 @@ This project requires the following dependencies:
 │ └── main.py
 │
 ├── .gitignore
+├── Dokerfile
 ├── document.pdf
 ├── README.md
 └── requirements.txt
@@ -60,7 +139,7 @@ This project requires the following dependencies:
 
 ## Results
 
-- PDF with the grid off
+-   PDF with the grid off
 
 <div style="display: flex;">
     <div style="flex: 50%; padding: 5px;">
@@ -71,7 +150,7 @@ This project requires the following dependencies:
     </div>
 </div>
 
-- PDF with the grid on
+-   PDF with the grid on
 
 <div style="display: flex;">
     <div style="flex: 50%; padding: 5px;">
